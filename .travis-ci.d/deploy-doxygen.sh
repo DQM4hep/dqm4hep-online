@@ -5,7 +5,7 @@ pkgVersion=""
 repository=$(basename $TRAVIS_REPO_SLUG | tr '[:upper:]' '[:lower:]')
 username=$(dirname $TRAVIS_REPO_SLUG | tr '[:upper:]' '[:lower:]')
 
-if [ ! "${CXX}" = "g++" ] || [ ! "${TRAVIS_OS_NAME}" = "linux" ]
+if [ ! "${CXX}" = "g++" ] || [ ! "${TRAVIS_OS_NAME}" = "linux" ] || [ "${TRAVIS_EVENT_TYPE}" = "cron" ]
 then
   echo "Build and push doxygen only one per push"
   exit 0
@@ -46,7 +46,7 @@ source dependencies/root/bin/thisroot.sh
 cd build
 
 # activate doxygen building target
-cmake -DINSTALL_DOC=ON ..
+cmake -DDQM4HEP_DOXYGEN_DOC=ON ..
 
 if [ $? -ne 0 ]; then
     echo "Failed to run cmake"
@@ -54,15 +54,14 @@ if [ $? -ne 0 ]; then
 fi
 
 # build doxygen documentation
-make doc
+make install
 
 if [ $? -ne 0 ]; then
-    echo "Failed to run make doc"
+    echo "Failed to run make install"
     exit 1
 fi
 
 # get the doxygen package
-cd ../doc
 git clone https://rete:$GITHUB_ACCESS_TOKEN@github.com/dqm4hep/dqm4hep-doxygen.git --branch=gh-pages
 cd dqm4hep-doxygen
 
@@ -78,7 +77,7 @@ cd doxygen/${doxygenDirectory}
 rm -rf *
 
 # copy the new one in place
-cp -r $TRAVIS_BUILD_DIR/build/docbuild/html/* .
+cp -r $TRAVIS_BUILD_DIR/build/docbuild/DQMOnline/html/* .
 
 # commit the new doc
 git add ./*
