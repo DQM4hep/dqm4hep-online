@@ -34,7 +34,7 @@ std::shared_ptr<dqm4hep::online::EventCollector> application;
 //-------------------------------------------------------------------------------------------------
 
 // key interrupt signal handling
-void int_key_signal_handler(int signal) {
+void int_key_signal_handler(int) {
   dqm_info( "Caught CTRL+C. Stopping event collector..." );
   if(application) {
     application->exit(0);
