@@ -153,7 +153,8 @@ namespace dqm4hep {
         {"run", jsonRun}
       };
       auto model = response.createModel<std::string>();
-      model->move(std::move(jsonStatus.dump()));
+      std::string jsonDump(jsonStatus.dump());
+      model->move(std::move(jsonDump));
       response.setModel(model);
     }
 
