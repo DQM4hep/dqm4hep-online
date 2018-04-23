@@ -206,7 +206,8 @@ namespace dqm4hep {
       net::Buffer requestBuffer;
       auto model = requestBuffer.createModel<std::string>();
       requestBuffer.setModel(model);
-      model->move(std::move(info.dump()));
+      std::string jsonDump(info.dump());
+      model->move(std::move(jsonDump));
       
       m_client.sendRequest(requestName, requestBuffer, [&returnValue,&collector](const net::Buffer &buffer){
         core::json response({});
