@@ -32,42 +32,40 @@ namespace dqm4hep {
 
   namespace online {
     
-    AppEvent::AppEvent(int type) :
-      m_type(type)
-    {
+    AppEvent::AppEvent(int t) :
+      m_type(t) {
         /* nop */
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    AppEvent::~AppEvent()
-    {
+    AppEvent::~AppEvent() {
       /* nop */
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    int AppEvent::type() const
-    {
+    int AppEvent::type() const {
       return m_type;
     }
     
     //-------------------------------------------------------------------------------------------------
         
-    void AppEvent::setPriority(int priority)
-    {
-      if(priority > 100)
+    void AppEvent::setPriority(int p) {
+      if(p > 100) {
         m_priority = 100;
-      else if(priority < 0)
+      }
+      else if(p < 0) {
         m_priority = 0;
-      else
-        m_priority = priority;
+      }
+      else {
+        m_priority = p;
+      }
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    const int AppEvent::priority() const
-    {
+    int AppEvent::priority() const {
       return m_priority;
     }
 

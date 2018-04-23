@@ -33,26 +33,26 @@ namespace dqm4hep {
   namespace online {
 
     const std::string OnlineRoutes::RunControl::status(const std::string &runControlName) {
-      return std::string( "/dqm4hep/RunControl/" + runControlName + "/Status" );
+      return "/dqm4hep/RunControl/" + runControlName + "/Status";
     }
     
     //-------------------------------------------------------------------------------------------------
     
     const std::string OnlineRoutes::RunControl::sor(const std::string &runControlName) {
-      return std::string( "/dqm4hep/RunControl/" + runControlName + "/SOR" );
+      return "/dqm4hep/RunControl/" + runControlName + "/SOR";
     }
     
     //-------------------------------------------------------------------------------------------------
     
     const std::string OnlineRoutes::RunControl::eor(const std::string &runControlName) {
-      return std::string( "/dqm4hep/RunControl/" + runControlName + "/EOR" );
+      return "/dqm4hep/RunControl/" + runControlName + "/EOR";
     }
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
     std::string OnlineRoutes::Application::serverName(const std::string &type, const std::string &name) {
-      return std::string( "/dqm4hep/app/" + type + "/" + name );
+      return "/dqm4hep/app/" + type + "/" + name;
     }
     
     //-------------------------------------------------------------------------------------------------
@@ -71,50 +71,50 @@ namespace dqm4hep {
     //-------------------------------------------------------------------------------------------------
     
     std::string OnlineRoutes::EventCollector::registerSource(const std::string &collector) {
-      return std::string(OnlineRoutes::Application::serverName(applicationType(), collector) + "/register");
+      return OnlineRoutes::Application::serverName(applicationType(), collector) + "/register";
     }
     
     //-------------------------------------------------------------------------------------------------
     
     std::string OnlineRoutes::EventCollector::unregisterSource(const std::string &collector) {
-      return std::string(OnlineRoutes::Application::serverName(applicationType(), collector) + "/unregister");
+      return OnlineRoutes::Application::serverName(applicationType(), collector) + "/unregister";
     }
     
     //-------------------------------------------------------------------------------------------------
     
     std::string OnlineRoutes::EventCollector::collectEvent(const std::string &collector) {
-      return std::string(OnlineRoutes::Application::serverName(applicationType(), collector) + "/collect");
+      return OnlineRoutes::Application::serverName(applicationType(), collector) + "/collect";
     }
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
     const std::string OnlineRoutes::OnlineManager::serverName() {
-      return std::string("/dqm4hep/onlineMgr");
+      return "/dqm4hep/onlineMgr";
     }
     
     //-------------------------------------------------------------------------------------------------
     
     const std::string OnlineRoutes::OnlineManager::logs() {
-      return std::string("/dqm4hep/onlineMgr/logs");
+      return "/dqm4hep/onlineMgr/logs";
     }
     
     //-------------------------------------------------------------------------------------------------
 
     const std::string OnlineRoutes::OnlineManager::appStats() {
-      return std::string("/dqm4hep/onlineMgr/appStats");
+      return "/dqm4hep/onlineMgr/appStats";
     }
 
     //-------------------------------------------------------------------------------------------------    
 
     const std::string OnlineRoutes::OnlineManager::collectLog() {
-      return std::string("/dqm4hep/onlineMgr/collectLog");
+      return "/dqm4hep/onlineMgr/collectLog";
     }
     
     //-------------------------------------------------------------------------------------------------
     
     const std::string OnlineRoutes::OnlineManager::collectAppStat() {
-      return std::string("/dqm4hep/onlineMgr/collectAppStat");
+      return "/dqm4hep/onlineMgr/collectAppStat";
     }
     
     //-------------------------------------------------------------------------------------------------

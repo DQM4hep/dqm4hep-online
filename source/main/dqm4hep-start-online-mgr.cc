@@ -50,7 +50,7 @@ std::shared_ptr<OnlineManagerServer> server;
 //-------------------------------------------------------------------------------------------------
 
 // key interrupt signal handling
-void int_key_signal_handler(int signal) {
+void int_key_signal_handler(int) {
   std::cout << std::endl;
   dqm_info( "Caught CTRL+C. Stopping server..." );
   if(server) {

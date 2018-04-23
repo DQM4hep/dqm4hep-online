@@ -50,7 +50,9 @@ namespace dqm4hep {
       /**
        *  @brief  Default constructor
        */
-      Application() {};
+      Application() = default;
+      Application(const Application&) = delete;
+      Application& operator=(const Application&) = delete;
       
       /** 
        *  @brief  Destructor
@@ -408,11 +410,11 @@ namespace dqm4hep {
         using RequestSignal = core::Signal<const net::Buffer&, net::Buffer&>;
         
         AppEventLoop           &m_eventLoop;
-        const std::string       m_name;
-        const int               m_priority;
-        const int               m_maxNEvents;
-        ContentSignal           m_sendContentSignal;
-        RequestSignal           m_sendRequestSignal;
+        const std::string       m_name = {""};
+        const int               m_priority = {50};
+        const int               m_maxNEvents = {std::numeric_limits<int>::max()};
+        ContentSignal           m_sendContentSignal = {};
+        RequestSignal           m_sendRequestSignal = {};
       };
       
       typedef std::shared_ptr<NetworkHandler> NetworkHandlerPtr;
@@ -429,11 +431,11 @@ namespace dqm4hep {
       AppEventLoop                 m_eventLoop = {};                  ///< The application event loop
       std::shared_ptr<net::Server> m_server = {nullptr};              ///< The main server interface of the application
       net::Service                *m_pAppStateService = {nullptr};    ///< The service for application state, updated when the state changes
-      net::Client                  m_client;                          ///< The main client interface of the application
+      net::Client                  m_client = {};                     ///< The main client interface of the application
       
-      NetworkHandlerPtrMap         m_serviceHandlerPtrMap;            ///< The map handling service updates from the client interface
-      NetworkHandlerPtrMap         m_requestHandlerPtrMap;            ///< The map handling request handlers from the server interface
-      NetworkHandlerPtrMap         m_commandHandlerPtrMap;            ///< The map handling command handlers from the server interface
+      NetworkHandlerPtrMap         m_serviceHandlerPtrMap = {};       ///< The map handling service updates from the client interface
+      NetworkHandlerPtrMap         m_requestHandlerPtrMap = {};       ///< The map handling request handlers from the server interface
+      NetworkHandlerPtrMap         m_commandHandlerPtrMap = {};       ///< The map handling command handlers from the server interface
 
       core::json                   m_statistics = {};                 ///< The json value handling the application statistics
       core::Logger::LoggerPtr      m_logger = {nullptr};              ///< The application logger
@@ -444,31 +446,31 @@ namespace dqm4hep {
     //-------------------------------------------------------------------------------------------------
     
     template <typename T>
-    inline void Application::sendCommand(const std::string &name, const T &contents, bool blocking) const {
-      m_client.sendCommand(name, contents, blocking);
+    inline void Application::sendCommand(const std::string &cname, const T &contents, bool blocking) const {
+      m_client.sendCommand(cname, contents, blocking);
     }
     
     //-------------------------------------------------------------------------------------------------
     
     template <typename Operation>
-    inline void Application::sendRequest(const std::string &name, const net::Buffer &request, Operation operation) {
-      m_client.sendRequest(name, request, operation);
+    inline void Application::sendRequest(const std::string &rname, const net::Buffer &request, Operation operation) {
+      m_client.sendRequest(rname, request, operation);
     }
     
     //-------------------------------------------------------------------------------------------------
     
     template <typename Controller>
-    inline void Application::createTimer(const std::string &name, unsigned int nSeconds, bool singleShot,
+    inline void Application::createTimer(const std::string &tname, unsigned int nSeconds, bool singleShot,
                      Controller *controller, void (Controller::*function)()) {
-      m_eventLoop.createTimer(name, nSeconds, singleShot, controller, function);
+      m_eventLoop.createTimer(tname, nSeconds, singleShot, controller, function);
     }
     
     //-------------------------------------------------------------------------------------------------
     
     template <typename Controller>
-    inline Application::NetworkHandler::NetworkHandler(AppEventLoop &eventLoop, const std::string &name, Controller *controller, void (Controller::*function)(const net::Buffer &buffer)) :
+    inline Application::NetworkHandler::NetworkHandler(AppEventLoop &eventLoop, const std::string &sname, Controller *controller, void (Controller::*function)(const net::Buffer &buffer)) :
       m_eventLoop(eventLoop),
-      m_name(name),
+      m_name(sname),
       m_priority(0),
       m_maxNEvents(0) {
       m_sendContentSignal.connect(controller, function);
@@ -477,9 +479,9 @@ namespace dqm4hep {
     //-------------------------------------------------------------------------------------------------
 
     template <typename Controller>
-    inline Application::NetworkHandler::NetworkHandler(AppEventLoop &eventLoop, const std::string &name, Controller *controller, void (Controller::*function)(const net::Buffer &buffer, net::Buffer &response)) :
+    inline Application::NetworkHandler::NetworkHandler(AppEventLoop &eventLoop, const std::string &sname, Controller *controller, void (Controller::*function)(const net::Buffer &buffer, net::Buffer &response)) :
       m_eventLoop(eventLoop),
-      m_name(name),
+      m_name(sname),
       m_priority(0),
       m_maxNEvents(0) {
       m_sendRequestSignal.connect(controller, function);

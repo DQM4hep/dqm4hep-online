@@ -41,13 +41,13 @@ namespace dqm4hep {
     
     //-------------------------------------------------------------------------------------------------
     
-    void Application::setType(const std::string &type) {
+    void Application::setType(const std::string &appType) {
       if(initialized()) {
         dqm_error( "Application::setType(): Couldn't set app type, app is already initialized !" );
         throw core::StatusCodeException(core::STATUS_CODE_NOT_ALLOWED);
       }
-      dqm_debug( "Application set type to '{0}'", type );
-      m_type = type;
+      dqm_debug( "Application set type to '{0}'", appType );
+      m_type = appType;
     }
     
     //-------------------------------------------------------------------------------------------------
@@ -58,13 +58,13 @@ namespace dqm4hep {
     
     //-------------------------------------------------------------------------------------------------
 
-    void Application::setName(const std::string &name) {
+    void Application::setName(const std::string &appName) {
       if(initialized()) {
         dqm_error( "Application::setName(): Couldn't set app name, app is already initialized !" );
         throw core::StatusCodeException(core::STATUS_CODE_NOT_ALLOWED);
       }
-      dqm_debug( "Application set name to '{0}'", name );
-      m_name = name;
+      dqm_debug( "Application set name to '{0}'", appName );
+      m_name = appName;
     }
     
     //-------------------------------------------------------------------------------------------------
@@ -75,9 +75,9 @@ namespace dqm4hep {
     
     //-------------------------------------------------------------------------------------------------
     
-    void Application::setState(const std::string &state) {
-      m_state = state;
-      dqm_debug( "Changing app state to '{0}'", state );
+    void Application::setState(const std::string &appState) {
+      m_state = appState;
+      dqm_debug( "Changing app state to '{0}'", appState );
       
       if(m_pAppStateService && m_server && m_server->isRunning())
         m_pAppStateService->send(m_state);
@@ -100,35 +100,35 @@ namespace dqm4hep {
     
     //-------------------------------------------------------------------------------------------------
 
-    void Application::createStatsEntry(const std::string &name, const std::string &unit, const std::string &description) {
+    void Application::createStatsEntry(const std::string &entryName, const std::string &unit, const std::string &description) {
       if(initialized()) {
         dqm_error( "Application::createStatsEntry(): Couldn't create stat entry, app is already initialized !" );
         throw core::StatusCodeException(core::STATUS_CODE_NOT_ALLOWED);
       }
       
-      if(not m_statistics[name].is_null())
+      if(not m_statistics[entryName].is_null())
         throw core::StatusCodeException(core::STATUS_CODE_ALREADY_PRESENT);
       
       // add stat entry
-      m_statistics[name] = {
+      m_statistics[entryName] = {
         {"description", description},
         {"unit", unit}
       };
       
-      dqm_debug( "Creating stat entry '{0}' (unit {1}): {2}", name, unit, description );
+      dqm_debug( "Creating stat entry '{0}' (unit {1}): {2}", entryName, unit, description );
     }
   
     //-------------------------------------------------------------------------------------------------
 
-    void Application::sendStat(const std::string &name, double stats) {
+    void Application::sendStat(const std::string &entryName, double stats) {
       if(not statsEnabled()) {
         return;
       }
-      core::json object = m_statistics[name];
+      core::json object = m_statistics[entryName];
       if(object.is_null())
         throw core::StatusCodeException(core::STATUS_CODE_NOT_FOUND);
       // add metadata on the fly
-      object["name"] = name;
+      object["name"] = entryName;
       object["value"] = stats;
       object["appType"] = this->type();
       object["appName"] = this->name();
@@ -237,8 +237,8 @@ namespace dqm4hep {
         dqm_error( "Application::init(): failed to start the app !" );
         throw core::StatusCodeException(core::STATUS_CODE_FAILURE);
       }      
-      std::stringstream state; state << "Exiting (" << returnCode << ")"; 
-      this->setState(state.str());
+      std::stringstream appState; appState << "Exiting (" << returnCode << ")"; 
+      this->setState(appState.str());
       m_running = false;
 
       return returnCode;
@@ -279,12 +279,12 @@ namespace dqm4hep {
     
     //-------------------------------------------------------------------------------------------------
     
-    net::Service *Application::createService(const std::string &name) {
+    net::Service *Application::createService(const std::string &sname) {
       if(not m_server) {
-        dqm_error( "Application::createService(): couldn't create service '{0}', server is not yet allocated", name );
+        dqm_error( "Application::createService(): couldn't create service '{0}', server is not yet allocated", sname );
         throw core::StatusCodeException(core::STATUS_CODE_NOT_INITIALIZED);
       }
-      return m_server->createService(name);
+      return m_server->createService(sname);
     }
     
     //-------------------------------------------------------------------------------------------------
@@ -315,15 +315,15 @@ namespace dqm4hep {
     
     //-------------------------------------------------------------------------------------------------
     
-    void Application::sendClientExitEvent(int clientId) {
-      ClientExitEvent *pEvent = new ClientExitEvent(clientId);
+    void Application::sendClientExitEvent(int id) {
+      ClientExitEvent *pEvent = new ClientExitEvent(id);
       m_eventLoop.sendEvent(pEvent);
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    void Application::removeTimer(const std::string &name) {
-      m_eventLoop.removeTimer(name);
+    void Application::removeTimer(const std::string &tname) {
+      m_eventLoop.removeTimer(tname);
     }
     
     //-------------------------------------------------------------------------------------------------

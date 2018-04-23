@@ -68,9 +68,9 @@ namespace dqm4hep {
       void flush() override;
       
     private:
-      core::json     m_message;     ///< The log message to send as json
-      std::string    m_hostname;    ///< The current host name
-      net::Client    m_client;      ///< The net client interface
+      core::json     m_message = {};       ///< The log message to send as json
+      std::string    m_hostname = {""};    ///< The current host name
+      net::Client    m_client = {};        ///< The net client interface
     };
 
   }

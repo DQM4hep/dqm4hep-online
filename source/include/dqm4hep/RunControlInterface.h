@@ -56,7 +56,7 @@ namespace dqm4hep {
       /** 
        *  @brief  Destructor
        */
-      virtual ~RunControlInterface();
+      virtual ~RunControlInterface() {}
       
       /** 
        *  @brief  Read settings from map

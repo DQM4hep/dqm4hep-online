@@ -39,63 +39,43 @@ namespace dqm4hep {
 
   namespace online {
 
-    RunControlServer::RunControlServer()
-    {
-      /* nop */
-    }
-
-    //-------------------------------------------------------------------------------------------------
-
-    RunControlServer::~RunControlServer()
-    {
-    }
-
-    //-------------------------------------------------------------------------------------------------
-
-    void RunControlServer::setName(const std::string &name)
-    {
+    void RunControlServer::setName(const std::string &name) {
       m_runControl.setName(name);
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    void RunControlServer::setPassword(const std::string &pwd)
-    {
+    void RunControlServer::setPassword(const std::string &pwd) {
       m_runControl.setPassword(pwd);
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    void RunControlServer::setInterface(const std::string &name)
-    {
+    void RunControlServer::setInterface(const std::string &name) {
       m_interfaceName = name;
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    void RunControlServer::setUserParameters(const dqm4hep::core::StringMap &parameters)
-    {
+    void RunControlServer::setUserParameters(const dqm4hep::core::StringMap &parameters) {
       m_userParameters = parameters;
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    RunControl &RunControlServer::runControl()
-    {
+    RunControl &RunControlServer::runControl() {
       return m_runControl;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    void RunControlServer::run()
-    {
+    void RunControlServer::run() {
       m_stopFlag = false;
             
       // create user external interface (plugin)
       m_interface = PluginManager::instance()->create<RunControlInterface>(m_interfaceName);
       
-      if( ! m_interface )
-      {
+      if( not m_interface ) {
         dqm_error( "Couldn't find run control interface '{0}' in plugin manager", m_interfaceName );
         throw StatusCodeException(STATUS_CODE_NOT_FOUND);
       }
@@ -149,34 +129,29 @@ namespace dqm4hep {
 
     //-------------------------------------------------------------------------------------------------
 
-    void RunControlServer::sor(dqm4hep::core::Run &run)
-    {
+    void RunControlServer::sor(dqm4hep::core::Run &r) {
       core::json jsonRun;
-      run.toJson(jsonRun);
+      r.toJson(jsonRun);
       m_pSorService->send(jsonRun.dump());
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    void RunControlServer::eor(const dqm4hep::core::Run &run)
-    {
+    void RunControlServer::eor(const dqm4hep::core::Run &r) {
       core::json jsonRun;
-      run.toJson(jsonRun);
+      r.toJson(jsonRun);
       m_pEorService->send(jsonRun.dump());
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    void RunControlServer::sendCurrentRun(const Buffer &request, Buffer &response)
-    {
+    void RunControlServer::sendCurrentRun(const Buffer &/*request*/, Buffer &response) {
       core::json jsonStatus, jsonRun;
       m_runControl.currentRun().toJson(jsonRun);
-      
       jsonStatus = {
         {"running", m_runControl.isRunning()},
         {"run", jsonRun}
       };
-      
       auto model = response.createModel<std::string>();
       model->move(std::move(jsonStatus.dump()));
       response.setModel(model);

@@ -44,63 +44,59 @@ namespace dqm4hep {
       QuitEvent(int returnCode);
       int returnCode() const;
     private:
-      int          m_returnCode;
+      int          m_returnCode = {0};
     };
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
-    class ServiceUpdateEvent : public AppEvent
-    {
+    class ServiceUpdateEvent : public AppEvent {
     public:
       ServiceUpdateEvent(const std::string &serviceName, net::BufferModelPtr bufferModel);
       const std::string &serviceName() const;
       const net::Buffer &buffer() const;
     private:
-      std::string              m_serviceName;
-      net::Buffer              m_buffer;
+      std::string              m_serviceName = {""};
+      net::Buffer              m_buffer = {};
     };
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
-    class RequestEvent : public AppEvent
-    {
+    class RequestEvent : public AppEvent {
     public:
       RequestEvent(const std::string &name, net::BufferModelPtr requestBufferModel, net::Buffer &response);
       const std::string &requestName() const;
       const net::Buffer &request() const;
       net::Buffer &response() const;
     private:
-      std::string              m_requestName;
-      net::Buffer              m_requestBuffer;
+      std::string              m_requestName = {""};
+      net::Buffer              m_requestBuffer = {};
       net::Buffer             &m_responseBuffer;
     };
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
-    class CommandEvent : public AppEvent
-    {
+    class CommandEvent : public AppEvent {
     public:
       CommandEvent(const std::string &commandName, net::BufferModelPtr bufferModel);
       const std::string &commandName() const;
       const net::Buffer &buffer() const;
     private:
-      std::string              m_commandName;
-      net::Buffer              m_buffer;
+      std::string              m_commandName = {""};
+      net::Buffer              m_buffer = {};
     };
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
-    class ClientExitEvent : public AppEvent
-    {
+    class ClientExitEvent : public AppEvent {
     public:
       ClientExitEvent(int clientId);
       int clientId() const;
     private:
-      int                   m_clientId;
+      int                   m_clientId = {0};
     };
 
     //-------------------------------------------------------------------------------------------------
@@ -108,116 +104,100 @@ namespace dqm4hep {
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
 
-    inline QuitEvent::QuitEvent(int returnCode) :
+    inline QuitEvent::QuitEvent(int code) :
       AppEvent(AppEvent::QUIT),
-      m_returnCode(returnCode)
-    {
+      m_returnCode(code) {
       setPriority(100);
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    inline int QuitEvent::returnCode() const
-    {
+    inline int QuitEvent::returnCode() const {
       return m_returnCode;
     }
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
-    inline ServiceUpdateEvent::ServiceUpdateEvent(const std::string &serviceName, net::BufferModelPtr bufferModel) :
+    inline ServiceUpdateEvent::ServiceUpdateEvent(const std::string &sname, net::BufferModelPtr bufferModel) :
       AppEvent(SERVICE_UPDATE),
-      m_serviceName(serviceName),
-      m_buffer()
-    {
+      m_serviceName(sname) {
       m_buffer.setModel(bufferModel);
     }
     
     //-------------------------------------------------------------------------------------------------
 
-    inline const std::string &ServiceUpdateEvent::serviceName() const
-    {
+    inline const std::string &ServiceUpdateEvent::serviceName() const {
       return m_serviceName;
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    inline const net::Buffer &ServiceUpdateEvent::buffer() const
-    {
+    inline const net::Buffer &ServiceUpdateEvent::buffer() const {
       return m_buffer;
     }
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
-    inline RequestEvent::RequestEvent(const std::string &name, net::BufferModelPtr requestBufferModel, net::Buffer &response) :
+    inline RequestEvent::RequestEvent(const std::string &name, net::BufferModelPtr requestBufferModel, net::Buffer &responseBuffer) :
       AppEvent(AppEvent::REQUEST_HANDLING),
       m_requestName(name),
-      m_requestBuffer(),
-      m_responseBuffer(response)
-    {
+      m_responseBuffer(responseBuffer) {
       m_requestBuffer.setModel(requestBufferModel);
     }
     
     //-------------------------------------------------------------------------------------------------
 
-    inline const std::string &RequestEvent::requestName() const
-    {
+    inline const std::string &RequestEvent::requestName() const {
       return m_requestName;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    inline const net::Buffer &RequestEvent::request() const
-    {
+    inline const net::Buffer &RequestEvent::request() const {
       return m_requestBuffer;
     }
     
     //-------------------------------------------------------------------------------------------------
 
-    inline net::Buffer &RequestEvent::response() const
-    {
+    inline net::Buffer &RequestEvent::response() const {
       return m_responseBuffer;
     }
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
-    inline CommandEvent::CommandEvent(const std::string &commandName, net::BufferModelPtr bufferModel) :
+    inline CommandEvent::CommandEvent(const std::string &cname, net::BufferModelPtr bufferModel) :
       AppEvent(AppEvent::COMMAND_HANDLING),
-      m_commandName(commandName)
-    {
+      m_commandName(cname) {
       m_buffer.setModel(bufferModel);
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    inline const std::string &CommandEvent::commandName() const
-    {
+    inline const std::string &CommandEvent::commandName() const {
       return m_commandName;
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    inline const net::Buffer &CommandEvent::buffer() const
-    {
+    inline const net::Buffer &CommandEvent::buffer() const {
       return m_buffer;
     }
     
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
-    inline ClientExitEvent::ClientExitEvent(int clientId) :
+    inline ClientExitEvent::ClientExitEvent(int id) :
       AppEvent(AppEvent::CLIENT_EXIT),
-      m_clientId(clientId)
-    {
-      
+      m_clientId(id) {
+      /* nop */
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    inline int ClientExitEvent::clientId() const
-    {
+    inline int ClientExitEvent::clientId() const {
       return m_clientId;
     }
 

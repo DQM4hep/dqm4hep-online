@@ -39,52 +39,40 @@ namespace dqm4hep {
 
   namespace online {
 
-    RunControl::RunControl()
-    {
+    RunControl::RunControl(const std::string &rcname) :
+        m_name(rcname) {
       /* nop */
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    RunControl::RunControl(const std::string &name) :
-        m_name(name)
-    {
-      /* nop */
-    }
-
-    //-------------------------------------------------------------------------------------------------
-
-    RunControl::~RunControl()
-    {
+    RunControl::~RunControl() {
       if(this->isRunning())
         this->endCurrentRun(dqm4hep::core::StringMap(), m_password);
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    StatusCode RunControl::setName(const std::string &name)
-    {
-      if(name == m_name)
+    StatusCode RunControl::setName(const std::string &rcname) {
+      if(rcname == m_name)
         return STATUS_CODE_SUCCESS;
 
       if(this->isRunning())
         return STATUS_CODE_NOT_ALLOWED;
 
-      m_name = name;
+      m_name = rcname;
       return STATUS_CODE_SUCCESS;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    const std::string &RunControl::name() const
-    {
+    const std::string &RunControl::name() const {
       return m_name;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    StatusCode RunControl::startNewRun(const Run &run, const std::string &password)
-    {
+    StatusCode RunControl::startNewRun(const Run &run, const std::string &password) {
       if( ! this->checkPassword(password) )
         return STATUS_CODE_NOT_ALLOWED;
 
@@ -93,16 +81,13 @@ namespace dqm4hep {
 
       m_run = run;
       m_running = true;
-
       m_sorSignal.process(m_run);
-
       return STATUS_CODE_SUCCESS;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    StatusCode RunControl::startNewRun(int runNumber, const std::string &description, const std::string &detectorName, const dqm4hep::core::StringMap &parameters, const std::string &password)
-    {
+    StatusCode RunControl::startNewRun(int runNumber, const std::string &description, const std::string &detectorName, const dqm4hep::core::StringMap &parameters, const std::string &password) {
       if( ! this->checkPassword(password) )
         return STATUS_CODE_NOT_ALLOWED;
 
@@ -116,14 +101,12 @@ namespace dqm4hep {
         
       m_sorSignal.process(m_run);
       m_running = true;
-
       return STATUS_CODE_SUCCESS;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    StatusCode RunControl::endCurrentRun(const dqm4hep::core::StringMap &parameters, const std::string &password)
-    {
+    StatusCode RunControl::endCurrentRun(const dqm4hep::core::StringMap &parameters, const std::string &password) {
       if( ! this->checkPassword(password) )
         return STATUS_CODE_NOT_ALLOWED;
 
@@ -136,62 +119,54 @@ namespace dqm4hep {
       m_eorSignal.process(m_run);
       m_running = false;
       m_run.reset();
-
       return STATUS_CODE_SUCCESS;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    const Run &RunControl::currentRun() const
-    {
+    const Run &RunControl::currentRun() const {
       return m_run;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    Run &RunControl::currentRun()
-    {
+    Run &RunControl::currentRun() {
       return m_run;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    bool RunControl::isRunning() const
-    {
+    bool RunControl::isRunning() const {
       return m_running;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    void RunControl::setPassword(const std::string &password)
-    {
+    void RunControl::setPassword(const std::string &password) {
       m_password = password;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    bool RunControl::checkPassword(const std::string &password)
-    {
-      if( m_password.empty() )
+    bool RunControl::checkPassword(const std::string &password) {
+      if( m_password.empty() ) {
         return true;
-
-      if( m_password == password )
+      }
+      if( m_password == password ) {
         return true;
-
+      }
       return false;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    StartOfRunSignal &RunControl::onStartOfRun()
-    {
+    StartOfRunSignal &RunControl::onStartOfRun() {
       return m_sorSignal;
     }
 
     //-------------------------------------------------------------------------------------------------
 
-    EndOfRunSignal &RunControl::onEndOfRun()
-    {
+    EndOfRunSignal &RunControl::onEndOfRun() {
       return m_eorSignal;
     }
 

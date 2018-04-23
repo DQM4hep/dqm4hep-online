@@ -49,18 +49,19 @@ namespace dqm4hep {
      *          Act as a bridge between an external run control interface and
      *          the applications listenning to this run control. 
      */
-    class RunControlServer
-    {
+    class RunControlServer {
     public:
       /** 
        *  @brief  Default constructor
        */
-      RunControlServer();
+      RunControlServer() = default;
+      RunControlServer(const RunControlServer&) = delete;
+      RunControlServer& operator=(const RunControlServer&) = delete;
 
       /** 
        *  @brief  Destructor
        */
-      ~RunControlServer();
+      ~RunControlServer() = default;
 
       /** 
        *  @brief  Set the run control name
@@ -116,14 +117,14 @@ namespace dqm4hep {
     private:
       typedef std::shared_ptr<RunControlInterface> RunControlInterfacePtr;
       typedef std::shared_ptr<dqm4hep::net::Server> ServerPtr;
-      RunControl                    m_runControl;              ///< The main run control
-      ServerPtr                     m_server = nullptr;       ///< The server to run
-      dqm4hep::net::Service        *m_pSorService = nullptr;   ///< The "start of run" service 
-      dqm4hep::net::Service        *m_pEorService = nullptr;   ///< The "end of run" service
-      RunControlInterfacePtr        m_interface = nullptr;    ///< The external user plugin interface
-      dqm4hep::core::StringMap      m_userParameters = {};     ///< The user parameters
-      std::atomic<bool>             m_stopFlag = {false};      ///< The stop flag to run the server
-      std::string                   m_interfaceName = "";      ///< The external user interface plugin name 
+      RunControl                    m_runControl = {};          ///< The main run control
+      ServerPtr                     m_server = {nullptr};       ///< The server to run
+      dqm4hep::net::Service        *m_pSorService = {nullptr};  ///< The "start of run" service 
+      dqm4hep::net::Service        *m_pEorService = {nullptr};  ///< The "end of run" service
+      RunControlInterfacePtr        m_interface = {nullptr};    ///< The external user plugin interface
+      dqm4hep::core::StringMap      m_userParameters = {};      ///< The user parameters
+      std::atomic<bool>             m_stopFlag = {false};       ///< The stop flag to run the server
+      std::string                   m_interfaceName = {""};     ///< The external user interface plugin name 
     };
 
   }

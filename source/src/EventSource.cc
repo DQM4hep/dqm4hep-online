@@ -42,8 +42,8 @@ namespace dqm4hep {
 
     //-------------------------------------------------------------------------------------------------
 
-    EventSource::EventSource(const std::string &sourceName) :
-        m_sourceName(sourceName) {
+    EventSource::EventSource(const std::string &name) :
+        m_sourceName(name) {
     }
     
     //-------------------------------------------------------------------------------------------------
@@ -58,21 +58,6 @@ namespace dqm4hep {
 
     const std::string &EventSource::sourceName() const {
       return m_sourceName;
-    }
-    
-    //-------------------------------------------------------------------------------------------------
-
-    void EventSource::setStreamerName(const std::string &name) {
-      if(m_started) {
-        throw core::StatusCodeException(core::STATUS_CODE_NOT_ALLOWED);
-      }        
-      m_streamerName = name;
-    }
-
-    //-------------------------------------------------------------------------------------------------
-
-    const std::string &EventSource::streamerName() const {
-      return m_streamerName;
     }
     
     //-------------------------------------------------------------------------------------------------
@@ -98,13 +83,6 @@ namespace dqm4hep {
     void EventSource::start() {
       if(m_started) {
         throw core::StatusCodeException(core::STATUS_CODE_ALREADY_INITIALIZED);
-      }
-      
-      m_eventStreamer = core::PluginManager::instance()->create<core::EventStreamer>(m_streamerName);
-      
-      if(not m_eventStreamer) {
-        dqm_error( "EventSource::start(): Event streamer '{0}' not found in available streamers. Couldn't initialize!", m_streamerName );
-        throw core::StatusCodeException(core::STATUS_CODE_NOT_FOUND);        
       }
       
       if(m_collectorInfos.empty()) {
@@ -158,9 +136,8 @@ namespace dqm4hep {
         throw core::StatusCodeException(core::STATUS_CODE_INVALID_PTR);
       }
       
-      (void)m_bufferDevice->reset();
-      
-      THROW_RESULT_IF(core::STATUS_CODE_SUCCESS, !=, m_eventStreamer->write(event, m_bufferDevice.get()));
+      (void)m_bufferDevice->reset();      
+      THROW_RESULT_IF(core::STATUS_CODE_SUCCESS, !=, m_eventStreamer.writeEvent(event, m_bufferDevice.get()));
       
       core::json sourceInfo;
       net::Buffer collectBuffer;
@@ -203,15 +180,6 @@ namespace dqm4hep {
         m_client.sendCommand(OnlineRoutes::EventCollector::collectEvent(collector), collectBuffer);
       }  
     }
-    
-    //-------------------------------------------------------------------------------------------------
-    
-    core::EventPtr EventSource::createEvent() const {
-      if(!m_started) {
-        throw core::StatusCodeException(core::STATUS_CODE_NOT_INITIALIZED);
-      }      
-      return m_eventStreamer->createEvent();
-    }
 
     //-------------------------------------------------------------------------------------------------
 
@@ -228,7 +196,6 @@ namespace dqm4hep {
       info["source"] = m_sourceName;
       info["host"] = hostInfo;
       info["collectors"] = collectorsValue;
-      info["streamer"] = m_streamerName;
     }
     
     //-------------------------------------------------------------------------------------------------

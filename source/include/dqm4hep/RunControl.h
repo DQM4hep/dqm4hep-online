@@ -66,13 +66,12 @@ namespace dqm4hep {
      *  runControl.endCurrentRun(); // onEndOfRun method called
      *  @endcode 
      */
-    class RunControl
-    {
+    class RunControl {
     public:
       /** 
        *  @brief  Default constructor
        */
-      RunControl();
+      RunControl() = default;
 
       /** 
        *  @brief  Constructor

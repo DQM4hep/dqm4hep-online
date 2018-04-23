@@ -36,9 +36,9 @@ namespace dqm4hep {
 
   namespace online {
     
-    AppEventLoop::Timer::Timer(const std::string &name, AppEventLoop &loop) :
+    AppEventLoop::Timer::Timer(const std::string &n, AppEventLoop &loop) :
       DimTimer(),
-      m_name(name),
+      m_name(n),
       m_appEventLoop(loop)
     {
       /* nop */

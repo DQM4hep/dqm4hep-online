@@ -37,64 +37,52 @@ namespace dqm4hep {
 
   namespace online {
 
-    RunControlInterface::~RunControlInterface()
-    {
-      /* nop */
-    }
-
-    //-------------------------------------------------------------------------------------------------
-
-    void RunControlInterface::startNewRun(const dqm4hep::core::Run &run, const std::string &password)
-    {
-      if(!m_pServer)
+    void RunControlInterface::startNewRun(const dqm4hep::core::Run &r, const std::string &password) {
+      if(!m_pServer) {
         throw StatusCodeException(STATUS_CODE_NOT_INITIALIZED);
-
-      m_pServer->runControl().startNewRun(run, password);        
+      }
+      m_pServer->runControl().startNewRun(r, password);
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    void RunControlInterface::endCurrentRun(const dqm4hep::core::StringMap &parameters, const std::string &password)
-    {
-      if(!m_pServer)
+    void RunControlInterface::endCurrentRun(const dqm4hep::core::StringMap &parameters, const std::string &password) {
+      if(!m_pServer) {
         throw StatusCodeException(STATUS_CODE_NOT_INITIALIZED);
-
+      }
       m_pServer->runControl().endCurrentRun(parameters, password);
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    StartOfRunSignal &RunControlInterface::onStartOfRun()
-    {
-      if(!m_pServer)
+    StartOfRunSignal &RunControlInterface::onStartOfRun() {
+      if(!m_pServer) {
         throw StatusCodeException(STATUS_CODE_NOT_INITIALIZED);
-
+      }
       return m_pServer->runControl().onStartOfRun();
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    EndOfRunSignal &RunControlInterface::onEndOfRun()
-    {
-
-
+    EndOfRunSignal &RunControlInterface::onEndOfRun() {
+      if(!m_pServer) {
+        throw StatusCodeException(STATUS_CODE_NOT_INITIALIZED);
+      }
       return m_pServer->runControl().onEndOfRun();
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    const RunControl& RunControlInterface::runControl() const
-    {
-      if(!m_pServer)
+    const RunControl& RunControlInterface::runControl() const {
+      if(!m_pServer) {
         throw StatusCodeException(STATUS_CODE_NOT_INITIALIZED);
-
+      }
       return m_pServer->runControl();
     }
     
     //-------------------------------------------------------------------------------------------------
     
-    void RunControlInterface::setServer(RunControlServer *srv)
-    {
+    void RunControlInterface::setServer(RunControlServer *srv) {
       m_pServer = srv;
     }
 

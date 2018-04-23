@@ -207,7 +207,7 @@ namespace dqm4hep {
 
       private:
         std::string        m_name = {""};
-        core::Signal<void> m_timeoutSignal;
+        core::Signal<void> m_timeoutSignal = {};
         bool               m_singleShot = {true};
         int                m_timeout = {10};
         AppEventLoop&      m_appEventLoop;

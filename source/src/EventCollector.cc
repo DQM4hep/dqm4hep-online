@@ -282,13 +282,13 @@ namespace dqm4hep {
     //-------------------------------------------------------------------------------------------------
     
     EventCollector::SourceInfo::SourceInfo(EventCollector::SourceInfo&& info) :
-      m_clientId(std::move(m_clientId)),
-      m_name(std::move(m_name)),
-      m_streamerName(std::move(m_streamerName)),
-      m_collectors(std::move(m_collectors)),
-      m_hostInfo(std::move(m_hostInfo)),
-      m_buffer(std::move(m_buffer))
-    {
+      m_clientId(std::move(info.m_clientId)),
+      m_name(std::move(info.m_name)),
+      m_streamerName(std::move(info.m_streamerName)),
+      m_collectors(std::move(info.m_collectors)),
+      m_hostInfo(std::move(info.m_hostInfo)),
+      m_buffer(std::move(info.m_buffer)) {
+        /* nop */
     }
 
   }

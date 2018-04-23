@@ -55,7 +55,6 @@ namespace dqm4hep {
      *          A typical usage could be:
      *          @code
      *          EventSourcePtr source = EventSource::make_shared("EventBuilder");
-     *          source->setStreamerName("GenericEventStreamer");
      *          source->addCollector("CentralCollector");
      *          source->addCollector("PrivateCollector");
      *          source->start();
@@ -70,9 +69,9 @@ namespace dqm4hep {
       /**
        *  @brief  Factory method to create a shared pointer of event source
        *  
-       *  @param  sourceName the source name
+       *  @param  name the source name
        */
-      static EventSourcePtr make_shared(const std::string &sourceName);
+      static EventSourcePtr make_shared(const std::string &name);
 
       /**
        *  @brief  Destructor
@@ -83,19 +82,6 @@ namespace dqm4hep {
        *  @brief  Get the source name
        */
       const std::string &sourceName() const;
-      
-      /**
-       *  @brief  Set the event streamer name.
-       *          Must be set before calling start()
-       *          
-       *  @param  name the event streamer name
-       */
-      void setStreamerName(const std::string &name);
-      
-      /**
-       *  @brief  Get the event streamer name
-       */
-      const std::string &streamerName() const;
       
       /**
        *  @brief  Add a new collector server to which events will be sent.
@@ -129,11 +115,6 @@ namespace dqm4hep {
        *  @param  event the event pointer to serialize and send
        */
       void sendEvent(const std::string &collector, const core::EventPtr &event);
-      
-      /**
-       *  @brief
-       */
-      core::EventPtr createEvent() const;
       
     private:
       /**
@@ -178,8 +159,7 @@ namespace dqm4hep {
       /**
        *  @brief  CollectorInfo struct
        */
-      struct CollectorInfo
-      {
+      struct CollectorInfo {
         bool             m_registered = false;   ///< Whether the source is registered to the event collector
       };
       
@@ -188,13 +168,12 @@ namespace dqm4hep {
       typedef std::shared_ptr<xdrstream::BufferDevice> BufferDevicePtr;
       typedef std::map<std::string, CollectorInfo> CollectorInfoMap;
       
-      bool                                m_started = false;               ///< Whether the event source was started
-      std::string                         m_sourceName = "";               ///< The source name
-      std::string                         m_streamerName = "";             ///< The event streamer name (plugin name)
-      EventStreamerPtr                    m_eventStreamer = {nullptr};     ///< The event streamer pointer
-      CollectorInfoMap                    m_collectorInfos = {};           ///< The map of event collector infos
-      net::Client                         m_client;                        ///< The networking client interface 
-      BufferDevicePtr                     m_bufferDevice = {nullptr};      ///< The serialized event raw buffer (from xdrstream)
+      bool                                m_started = {false};               ///< Whether the event source was started
+      std::string                         m_sourceName = {""};               ///< The source name
+      core::EventStreamer                 m_eventStreamer = {};              ///< The event streamer
+      CollectorInfoMap                    m_collectorInfos = {};             ///< The map of event collector infos
+      net::Client                         m_client = {};                     ///< The networking client interface 
+      BufferDevicePtr                     m_bufferDevice = {nullptr};        ///< The serialized event raw buffer (from xdrstream)
     };
 
   }

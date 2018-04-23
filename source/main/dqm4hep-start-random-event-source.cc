@@ -53,7 +53,7 @@ std::atomic_bool running(true);
 //-------------------------------------------------------------------------------------------------
 
 // key interrupt signal handling
-void int_key_signal_handler(int signal)
+void int_key_signal_handler(int)
 {
   std::cout << std::endl;
   dqm_info( "Caught CTRL+C. Exiting..." );
@@ -116,7 +116,6 @@ int main(int argc, char* argv[])
   for(auto collector : collectors)
     eventSource->addCollector(collector);
 
-  eventSource->setStreamerName("GenericEventStreamer");
   eventSource->start();
   
   uint32_t eventNumber(0);
@@ -127,11 +126,12 @@ int main(int argc, char* argv[])
   
   while(running)
   {
-    EventPtr event = eventSource->createEvent();
+    EventPtr event = GenericEvent::make_shared();;
     event->setTimeStamp(dqm4hep::core::now());
     event->setType(CUSTOM_EVENT);
     event->setSource(sourceNameArg.getValue());
     event->setRunNumber(runNumber);
+    event->setStreamerName("GenericEventStreamer");
     
     GenericEvent *generic = event->getEvent<GenericEvent>();
     std::vector<float> values;

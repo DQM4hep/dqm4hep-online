@@ -52,6 +52,8 @@ namespace dqm4hep {
        *  @brief  Constructor
        */
       OnlineManagerServer() = default;
+      OnlineManagerServer(const OnlineManagerServer&) = delete;
+      OnlineManagerServer& operator=(const OnlineManagerServer&) = delete;
       
       /**
        *  @brief  Run the server

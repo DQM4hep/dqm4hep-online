@@ -54,7 +54,7 @@ using namespace dqm4hep::core;
 std::atomic<bool> stopFlag(false);
 
 // key interrupt signal handling
-void int_key_signal_handler(int signal) {
+void int_key_signal_handler(int) {
   std::cout << std::endl;
   dqm_info( "Caught CTRL+C. Exiting..." );
   stopFlag = true;

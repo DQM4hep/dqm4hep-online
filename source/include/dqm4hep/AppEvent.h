@@ -38,8 +38,7 @@ namespace dqm4hep {
       /**
        *  @brief  AppEvent type enum
        */
-      enum Type
-      {
+      enum Type {
         NONE = 0,
         QUIT,
         SERVICE_UPDATE,
@@ -75,7 +74,7 @@ namespace dqm4hep {
       /**
        *  @brief  Get the event priority
        */
-      const int priority() const;
+      int priority() const;
       
     private:
       int               m_type = {AppEvent::NONE};
