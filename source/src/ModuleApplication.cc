@@ -302,15 +302,10 @@ namespace dqm4hep {
       
       auto document = m_parser.document();
       const core::TiXmlHandle xmlHandle(document.RootElement());
-      
-      auto qtestsElement = xmlHandle.FirstChildElement("qtests").Element();
-      if(nullptr != qtestsElement) {
-        THROW_RESULT_IF(core::STATUS_CODE_SUCCESS, !=, m_monitorElementManager->createQualityTests(qtestsElement));
-      }
-      
-      auto mesElement = xmlHandle.FirstChildElement("monitorElements").Element();
-      if(nullptr != mesElement) {
-        THROW_RESULT_IF(core::STATUS_CODE_SUCCESS, !=, m_monitorElementManager->readMonitorElements<OnlineElement>(mesElement, true));
+
+      auto storageElement = xmlHandle.FirstChildElement("storage").Element();
+      if(nullptr != storageElement) {
+        THROW_RESULT_IF(core::STATUS_CODE_SUCCESS, !=, m_monitorElementManager->parseStorage<OnlineElement>(storageElement));
       }
       
       auto moduleElement = xmlHandle.FirstChildElement("module").Element();
