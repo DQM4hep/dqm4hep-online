@@ -14,7 +14,7 @@ if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then export DQM4HEP_TESTING="OFF";
 else export DQM4HEP_TESTING="ON";
 fi
 
-cmake -DDQM4HEP_USE_MASTER=ON -DDQM4HEP_DOXYGEN_DOC=OFF -DDQM4HEP_TESTING=$DQM4HEP_TESTING -DDQM4HEP_WARNING_AS_ERROR=ON -DDQM4HEP_DEV_WARNINGS=ON -DDQMCore_repository=https://github.com/rete/dqm4hep-core.git -DDQMCore_version=reference-mechanism -DDQMOnline_repository=$TRAVIS_BUILD_DIR -DDQMOnline_version=$TRAVIS_COMMIT ..
+cmake -DDQM4HEP_USE_MASTER=ON -DDQM4HEP_DOXYGEN_DOC=OFF -DDQM4HEP_TESTING=$DQM4HEP_TESTING -DDQM4HEP_WARNING_AS_ERROR=ON -DDQM4HEP_DEV_WARNINGS=ON -DDQMOnline_repository=$TRAVIS_BUILD_DIR -DDQMOnline_version=$TRAVIS_COMMIT ..
 
 if [ $? -ne 0 ]; then
     echo "Failed to run cmake"
