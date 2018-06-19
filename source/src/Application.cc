@@ -397,9 +397,9 @@ namespace dqm4hep {
       sendStat("RSSTotal", (procRss/(memInfo.rssTot*1.))*100.);
       sendStat("RSSInUse", (procRss/(memInfo.rssUsed*1.))*100.);
 
-      sendStat("CpuUser", procRss);
-      sendStat("CpuSys", (procRss/(memInfo.rssTot*1.))*100.);
-      sendStat("CpuTotal", (procRss/(memInfo.rssUsed*1.))*100.);
+      sendStat("CpuUser", m_stats.cpuUser);
+      sendStat("CpuSys", m_stats.cpuSys);
+      sendStat("CpuTotal", m_stats.cpuTot);
 
       dqm_debug( "Sending internal app stats ... OK" );
     }
