@@ -2,7 +2,7 @@
   
   <!-- Application settings -->
   <settings mode="EventReader">
-    <parameter name="EnableStatistics"> false </parameter>
+    <parameter name="EnableStatistics"> true </parameter>
     <parameter name="EventReader"> GenericEventXMLReader </parameter>
     <parameter name="EventFileName"> /home/$ENV{USER}/soft/dqm4hep-core/tests/genevt_dummy_data.xml </parameter>
     <parameter name="CyclePeriod"> 1 </parameter>
