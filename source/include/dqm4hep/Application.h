@@ -515,7 +515,7 @@ namespace dqm4hep {
     //-------------------------------------------------------------------------------------------------
     
     template <typename T>
-    void Application::sendStat(const std::string &entryName, const T &stats){
+    inline void Application::sendStat(const std::string &entryName, const T &stats){
       if(not statsEnabled() or noServer()) {
         return;
       }
