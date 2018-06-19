@@ -394,13 +394,13 @@ namespace dqm4hep {
     void Application::createInternalStats() {
       // Virtual memory
       createStatsEntry("VmProc", "Mo", "The current virtual memory in use by the application (unit Mo)");
-      createStatsEntry("VmTotal", "%", "The current virtual memory percentage in use by the application compare to the total available on the host (unit %)");
-      createStatsEntry("VmInUse", "%", "The current virtual memory percentage in use by the application compare to the total used by the running processes (unit %)");
+      createStatsEntry("VmTotal", "%", "The current virtual memory percentage in use by the application compared to the total available on the host (unit %)");
+      createStatsEntry("VmInUse", "%", "The current virtual memory percentage in use by the application compared to the total used by the running processes (unit %)");
       
       // Resident set size
       createStatsEntry("RSSProc", "Mo", "The current resident set size memory in use by the application (unit Mo)");
-      createStatsEntry("RSSTotal", "%", "The current resident set size memory percentage in use by the application compare to the total available on the host (unit %)");
-      createStatsEntry("RSSInUse", "%", "The current resident set size memory percentage in use by the application compare to the total used by the running processes (unit %)");
+      createStatsEntry("RSSTotal", "%", "The current resident set size memory percentage in use by the application compared to the total available on the host (unit %)");
+      createStatsEntry("RSSInUse", "%", "The current resident set size memory percentage in use by the application compared to the total used by the running processes (unit %)");
 
       // Cpu
       createStatsEntry("CpuUser", "%", "The current user cpu load of the application (unit %)");
