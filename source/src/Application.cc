@@ -381,6 +381,11 @@ namespace dqm4hep {
       sendStat("CpuSys", m_stats.cpuSys);
       sendStat("CpuTotal", m_stats.cpuTot);
 
+      auto tm_time = localtime(&m_stats.lastPollTime.tv_sec);
+      char date_buf[100];
+      std::strftime(date_buf, sizeof(date_buf), "%Y-%m-%d %H:%M:%S", tm_time);
+
+      sendStat("LastUpdate", date_buf );
       dqm_debug( "Sending internal app stats ... OK" );
     }
     
