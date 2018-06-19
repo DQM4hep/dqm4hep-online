@@ -27,7 +27,6 @@
 
 // -- dqm4hep headers
 #include "dqm4hep/Application.h"
-#include "dqm4hep/OnlineRoutes.h"
 #include "dqm4hep/RemoteLogger.h"
 #include "dqm4hep/Logging.h"
 
@@ -125,25 +124,6 @@ namespace dqm4hep {
       };
       
       dqm_debug( "Creating stat entry '{0}' (unit {1}): {2}", entryName, unit, description );
-    }
-  
-    //-------------------------------------------------------------------------------------------------
-
-    void Application::sendStat(const std::string &entryName, double stats) {
-      if(not statsEnabled() or noServer()) {
-        return;
-      }
-      core::json object = m_statistics[entryName];
-      if(object.is_null())
-        throw core::StatusCodeException(core::STATUS_CODE_NOT_FOUND);
-      // add metadata on the fly
-      object["name"] = entryName;
-      object["value"] = stats;
-      object["appType"] = this->type();
-      object["appName"] = this->name();
-      object["time"] = core::TimePoint::clock::to_time_t(core::now());
-      dqm_debug( "Sending app stat : \n'{0}'", object.dump() );
-      m_client.sendCommand(OnlineRoutes::OnlineManager::appStats(), object.dump());
     }
 
     //-------------------------------------------------------------------------------------------------    

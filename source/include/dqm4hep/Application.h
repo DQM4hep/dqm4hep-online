@@ -37,6 +37,7 @@
 #include "dqm4hep/AppEvents.h"
 #include "dqm4hep/AppEventLoop.h"
 #include "dqm4hep/Logger.h"
+#include "dqm4hep/OnlineRoutes.h"
 
 namespace dqm4hep {
 
@@ -162,7 +163,8 @@ namespace dqm4hep {
        *  @param  name the stat entry name
        *  @param  stats the new stat value
        */
-      void sendStat(const std::string &name, double stats);
+      template <typename T>
+      void sendStat(const std::string &name, const T &stats);
       
       /**
        *  @brief  Set whether to send statistics on update
@@ -512,6 +514,25 @@ namespace dqm4hep {
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
     
+    template <typename T>
+    void Application::sendStat(const std::string &entryName, const T &stats){
+      if(not statsEnabled() or noServer()) {
+        return;
+      }
+      core::json object = m_statistics[entryName];
+      if(object.is_null())
+        throw core::StatusCodeException(core::STATUS_CODE_NOT_FOUND);
+      // add metadata on the fly
+      object["name"] = entryName;
+      object["value"] = stats;
+      object["appType"] = this->type();
+      object["appName"] = this->name();
+      object["time"] = core::TimePoint::clock::to_time_t(core::now());
+      dqm_debug( "Sending app stat : \n'{0}'", object.dump() );
+      m_client.sendCommand(OnlineRoutes::OnlineManager::appStats(), object.dump());
+    }
+
+    //-------------------------------------------------------------------------------------------------
     template <typename T>
     inline void Application::sendCommand(const std::string &cname, const T &contents, bool blocking) const {
       m_client.sendCommand(cname, contents, blocking);
